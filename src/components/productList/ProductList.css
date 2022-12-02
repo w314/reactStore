@@ -1,0 +1,14 @@
+ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.product {
+  width: 100%;
+  padding: 2%;
+  min-width: 280px;
+  max-width: 350px;
+  margin: auto;
+  text-align: center;
+}

@@ -1,5 +1,8 @@
 import { useState } from 'react'
-import { Product } from '../../models/Product'
+import { ProductImage } from '../productImage/ProductImage'
+import './ProductList.css'
+import { ProductName } from '../productName/ProductName'
+import { ProductPrice } from '../productPrice/ProductPrice'
 
 export function ProductList() {
 
@@ -19,7 +22,16 @@ export function ProductList() {
     return (
         <div>
             <h1>Product List</h1>
-            <ul>{listItems}</ul>
+            <ul>
+              {products.map((product) => 
+                <li className='product' key={product.id}>
+                  <ProductImage url={product.url} alt={product.name}/>
+                  <ProductName name={product.name} />
+                  <ProductPrice price={product.price} />
+                </li>
+              )}
+              {/* {listItems} */}
+            </ul>
         </div>
     )
 }

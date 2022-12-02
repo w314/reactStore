@@ -29,7 +29,19 @@ sed -i '/index.css/d'  src/main.tsx
 - `'/index.css/d'` will delete (`d`) the line with the pattern provided (`index.css`) 
 
 
-### 3. Create files and directories
+### 3. Setup GIT
+```bash
+git init
+git add .
+git commit -m 'chore: Initial commit'
+```
+Setup and push to remote respository
+```bash
+git remote add origin https://github.com/w314/reactStore.git
+git push origin master
+```
+
+### 4. Create files and directories
 ```bash
 mkdir src/components
 mkdir src/components/productList
@@ -53,7 +65,7 @@ touch src/components/checkout/Checkout.tsx
 ```
 
 
-### 3. Setup Router
+### 5. Setup Router
 
 Install `react router`
 
@@ -95,6 +107,7 @@ function App(){
 
 export default App
 ```
+
 Create mock components to set up project sceleton:
 ```bash
 echo 'export function ProductList() {return <h1>PRODUCT LIST</h1>' > src/components/productList/ProductList.tsx
@@ -104,4 +117,13 @@ echo 'export function Product() {return <h1>PRODUCT</h1>' > src/components/produ
 echo 'export function Cart() {return <h1>CART</h1>' > src/components/cart/Cart.tsx
 
 echo 'export function Checkout() {return <h1>CHECKOUT</h1>' > src/components/checkout/Checkout.tsx
+
 ```
+
+Commmit changes:
+```bash
+git add .
+git commit -m 'feat: Setup project routing'
+git push origin master
+```
+

@@ -1,3 +1,4 @@
+import './App.css'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { ProductList } from './components/productList/ProductList'
 import { Product } from './components/product/Product'

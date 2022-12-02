@@ -1,0 +1,48 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+  --header-color: black;
+  --link-color: #2d545e;
+  --main-bg-color: white;
+  --main-color: black;
+  --button-bg-color: var(--header-color);
+  --button-border-color: #2d545e;
+  --button-color: white;
+  --button-padding: 3px;
+  --button-margin: 5px auto;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  max-width: 1200px;
+  margin: auto;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit
+}
+
+button {
+  padding: var(--button-padding);
+  margin: var(--button-margin);
+  border-radius: 5px;
+}
+
+input {
+  padding: var(--button-padding);
+  margin: var(--button-margin);
+}
+
+.inputError {
+  background-color: rgb(248, 163, 163);
+  font-size: 0.8em;
+  padding: 2px;
+}
