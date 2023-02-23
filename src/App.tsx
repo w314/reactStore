@@ -5,9 +5,9 @@ function App() {
 
   return (
     <Routes>
-      <Route path='/' element={<ProductList/>}/>
+      <Route path='/' element={<ProductList />}/>
     </Routes>
-    )
+  )
 }
 
 export default App
