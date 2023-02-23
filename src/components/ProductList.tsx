@@ -1,11 +1,12 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import ProductInterface from '../ProductInterface'
+// import Product from './Product'
+import { Link } from 'react-router-dom'
 
-const ProductList = () => {
-
+export default function ProductList() {
   const [products, setProducts] = useState([] as ProductInterface[])
-
+  
   useEffect(() => {
     fetch('./products.JSON')
     .then(response => response.json())
@@ -19,11 +20,13 @@ const ProductList = () => {
   return (
     <>
       {products.map(product => {
-        return <p>{product.name}</p>
+        return (
+          <div key={product.id}>
+            <p>{product.name}</p>
+            <Link to={`/products/${product.id}`}>select</Link>
+          </div>
+        )
       })}
-      Haho
     </>
   )
 }
-
-export default ProductList
