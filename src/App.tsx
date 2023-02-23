@@ -1,9 +1,13 @@
+import { Routes, Route } from 'react-router-dom'
+import ProductList from './components/ProductList'
 
 function App() {
 
   return (
-    <>STORE</>
-  )
+    <Routes>
+      <Route path='/' element={<ProductList/>}/>
+    </Routes>
+    )
 }
 
 export default App
