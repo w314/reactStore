@@ -3,7 +3,6 @@ import ProductList from './components/ProductList'
 import Product from './components/Product'
 
 function App() {
-
   return (
     <Routes>
       <Route path='/' element={<ProductList />}/>

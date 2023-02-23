@@ -2,7 +2,8 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import ProductInterface from '../ProductInterface'
 // import Product from './Product'
-import { Link } from 'react-router-dom'
+import { NavLink} from 'react-router-dom'
+
 
 export default function ProductList() {
   const [products, setProducts] = useState([] as ProductInterface[])
@@ -23,7 +24,8 @@ export default function ProductList() {
         return (
           <div key={product.id}>
             <p>{product.name}</p>
-            <Link to={`/products/${product.id}`}>select</Link>
+            // with the state property we send information to the child component
+            <NavLink to={`/products/${product.id}`} state={product}>select</NavLink>
           </div>
         )
       })}
