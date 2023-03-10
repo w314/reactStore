@@ -1,7 +1,7 @@
 import React from 'react'
 // import useParams to get product id from url
 import { useParams, useLocation } from 'react-router-dom'
-import ProductInterface from '../ProductInterface'
+import ProductInterface from '../models/ProductInterface'
 
 export default function Product() {
   // to use information store in the state prop

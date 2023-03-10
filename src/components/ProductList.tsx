@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import ProductInterface from '../ProductInterface'
+import ProductInterface from '../models/ProductInterface'
 // import Product from './Product'
 import { NavLink} from 'react-router-dom'
 
