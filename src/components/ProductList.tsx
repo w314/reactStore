@@ -1,34 +1,32 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
-import ProductInterface from '../models/ProductInterface'
-// import Product from './Product'
-import { NavLink} from 'react-router-dom'
-
+// import useContext to use context to get products
+import { useContext } from 'react'
+import { ProductContext } from '../ProductContext'
 
 export default function ProductList() {
-  const [products, setProducts] = useState([] as ProductInterface[])
-  
-  useEffect(() => {
-    fetch('./products.JSON')
-    .then(response => response.json())
-    .then(data =>  setProducts(data))
-    .catch(error => {
-      throw new Error('bajvan')
-    })
-  },[])
 
-  console.log(products)
+  // use object desturcturing 
+  // to get products from context
+  const { products } = useContext(ProductContext)
+
   return (
-    <>
-      {products.map(product => {
-        return (
-          <div key={product.id}>
-            <p>{product.name}</p>
-            // with the state property we send information to the child component
-            <NavLink to={`/products/${product.id}`} state={product}>select</NavLink>
-          </div>
-        )
-      })}
-    </>
+    // if we have products
+    products ?
+    // return html
+    <div>
+      {/* display list of products names */}
+      <ul>
+        {/* to avoid error if products is null */}
+        {products.map(product => {
+          return (
+            // set key for each iteration
+            // for this example as name is uniuq it will suffice
+            <li key={product.name}>{product.name}</li>
+          )
+        })}
+      </ul>
+    </div>
+    // if products is [] return null
+    : null
   )
 }

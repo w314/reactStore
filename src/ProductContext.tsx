@@ -26,15 +26,23 @@ const ProductsProvider = ({children}:{children:React.ReactNode}) => {
   // useEffect runs when the second parameter changes
   // as [] will never change, it will only run once when the app starts
   useEffect(() => {
-      fetch('../public/products.json')
+      fetch('../../public/products.JSON')
         // fetch returns a promise, that resolves with the response object
         // the response is the representation of the entire HTTP response
         // the json() method returns a second promise 
         // that parses the HTTP body text as JSON 
-        .then(response => response.json())
+        .then(response => {
+          console.log(`Response: \n ${response}`)
+          return response.json()
+        })
         // use the data received to set products
-        .then(data => setProducts(data))
+        .then(data =>  {
+          console.log(data)
+          setProducts(data)
+          console.log(products)
+        })
   }, [])
+
 
   // return child nodes wrapped in the provider
   return (

@@ -50,78 +50,112 @@ touch src/ProductContext.tsx
 
 `src/ProductContext.tsx`:
 ```typescript
-import React from 'react'
-import { useState, useEffect, createContext } from 'react'
-import Pokemon from './pokemonInterface'
+// imports for using context
+import { useContext, createContext, useState, useEffect } from 'react'
+// import Product Model
+import ProductInterface from './models/ProductInterface'
 
-
-/* THIS CONTEXT FILE HANDLES ALL FUNCTIONS CONCERNING STATE */
-
-// set context type
-type PokemonContextType = {
-  pokemons: Pokemon[] | null,
-  setPokemons: (pokemons: Pokemon[] | null) => void,
-  filter: string,
-  setFilter: (filter: string) => void,
-  selectedPokemon: Pokemon | null,
-  setSelectedPokemon: (pokemon: Pokemon | null) => void
+// create context type
+interface ProductContextInterface {
+  products: ProductInterface[] | null
 }
-
 
 // create context with providing initial values
 // export the context, for components to import it as needed
-export const PokemonContext = createContext<PokemonContextType>({
-  pokemons: [],
-  setPokemons: () => {},
-  filter: '',
-  setFilter: () => {},
-  selectedPokemon: null,
-  setSelectedPokemon: () => {},
+export const ProductContext = createContext<ProductContextInterface>({
+  products: []
 })
 
 // create context provider function
 // it takes children as prop and will return them wrapped in the provider
-const PokemonProvider = ({children}: {children: React.ReactNode}) => {
-  // define state
-  // pokemons array
-  const [pokemons, setPokemons] = useState<Pokemon[] | null>(null)
-  // search string to filter the pokemon list
-  const [filter, setFilter] = useState('')
-  // selected pokemon
-  const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null)
+const ProductsProvider = ({children}:{children:React.ReactNode}) => {
 
-    // use useEffect() to get pokemons when the component mounts
-    useEffect(() => {
-      fetch('./pokemons.json')
+  // create state to store products provided, set starting value
+  const [products, setProducts] = useState<ProductInterface[] | null>(null)
+
+  // get products from server
+  // useEffect runs when the second parameter changes
+  // as [] will never change, it will only run once when the app starts
+  useEffect(() => {
+      fetch('../public/products.json')
         // fetch returns a promise, that resolves with the response object
         // the response is the representation of the entire HTTP response
         // the json() method returns a second promise 
         // that parses the HTTP body text as JSON 
         .then(response => response.json())
-        // use the data recived to set Pokemom
-        .then(data => setPokemons(data))
-    }, [])
+        // use the data received to set products
+        .then(data => setProducts(data))
+  }, [])
 
-    // return children wrapped in the provider
-    // by setting up the Provider and its value prop here
-    // all aspects of context are handled here
-    // which keeps the App component simple
-    return (
-      < PokemonContext.Provider value={{
-          pokemons,
-          setPokemons,
-          filter,
-          setFilter,
-          selectedPokemon,
-          setSelectedPokemon
-        }}>
-          {children}
-      </PokemonContext.Provider>
-    )
- 
+  // return child nodes wrapped in the provider
+  return (
+    <ProductContext.Provider value={{products}}>
+       {children}
+    </ProductContext.Provider>
+  )
 }
 
-// export the provider created
-export default PokemonProvider
+// export provider
+export default ProductsProvider
 ```
 
+## Display Product List
+Create ProductList component:
+```bash
+mkdir src/components
+touch src/components/ProductList.tsx
+```
+`src/components/ProductList.tsx`:
+```typescript
+import React from 'react'
+// import useContext to use context to get products
+import { useContext } from 'react'
+import { ProductContext } from '../ProductContext'
+
+export default function ProductList() {
+
+  // use object desturcturing 
+  // to get products from context
+  const { products } = useContext(ProductContext)
+
+  return (
+    // if we have products
+    products ?
+    // return html
+    <div>
+      {/* display list of products names */}
+      <ul>
+        {/* to avoid error if products is null */}
+        {products.map(product => {
+          return (
+            // set key for each iteration
+            // for this example as name is uniuq it will suffice
+            <li key={product.name}>{product.name}</li>
+          )
+        })}
+      </ul>
+    </div>
+    // if products is [] return null
+    : null
+  )
+}
+```
+`src/App.tsx`:
+```typescript
+// import ProductsProvider to provide context to components
+import ProductsProvider from './ProductContext'
+// import ProductList component to display
+import ProductList from './components/ProductList'
+
+function App() {
+  return (
+    // wrap components into context provider
+    <ProductsProvider>
+      <ProductList></ProductList>
+    </ProductsProvider>
+  )
+}
+
+export default App
+
+```
