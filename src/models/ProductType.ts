@@ -1,4 +1,4 @@
-export default interface ProductInterface {
+export type ProductType =  {
   id: string,
   name: string,
   price: number,
