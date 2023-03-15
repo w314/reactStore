@@ -295,3 +295,75 @@ import Product from './Product'
   <li key={product.name}><Product product={product}></Product></li>
 //...
 ```
+
+## Create Navigation with Product List and Cart
+Create Cart component:
+```bash
+touch src/components/Cart.tsx
+```
+Create NavBar component
+```bash
+touch src/components/NavBar.tsx
+```
+Add router to project
+```bash
+yarn add react-router-dom
+```
+Wrap <App /> into <BrowserRouter> in `src/main.tsx`
+```tsx
+// imports for routing
+import { BrowserRouter } from 'react-router-dom'
+// ...
+// enclose <App /> in <BrowserRouter />
+<BrowserRouter>
+  <App />
+</BrowserRouter>
+//...
+```
+
+Create Routes in `src/App.tsx`:
+```tsx
+// imports for routing
+import { Routes, Route } from 'react-router-dom'
+// import components
+import ProductList from './components/ProductList'
+import NavBar from './components/NavBar'
+import Cart from './components/Cart'
+
+//...
+
+  return (
+    <div>
+      <NavBar></NavBar>
+      {/* wrap components into context provider */}
+      <ProductsProvider>
+        {/* <Routes> will handle what components to display */}
+        <Routes>
+          <Route path="/products" element={<ProductList />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/" element={<ProductList /> } />
+        </Routes>
+      </ProductsProvider>  
+    </div>
+  )
+//...
+```
+
+Create NavBar `src/components/NavBar.tsx`:
+```tsx
+import React from 'react'
+// imports for routing
+import { Link } from 'react-router-dom'
+
+export default function NavBar() {
+  return (
+    <nav>
+      <ul>
+        {/* use <Link> tag instead of <a> tag */}
+        <li key='products'><Link to="products">products</Link></li>
+        <li key='cart'><Link to="cart">cart</Link></li>
+      </ul>
+    </nav>
+  )
+}
+```
