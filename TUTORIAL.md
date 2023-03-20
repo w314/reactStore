@@ -367,3 +367,74 @@ export default function NavBar() {
   )
 }
 ```
+## Add Form AddToCart
+We'll create a child component AddToCart that has a form where the user can update the quantity and will pass that updated quantity back to the parent component.
+
+Create addToCart component:
+```bash
+touch src/components/AddToCart
+```
+`src/components/AddToCart.tsx`:
+```tsx
+import React from 'react'
+// import useRef
+import { useRef } from 'react'
+
+// add updateQuantity as prop to be received from parent component
+// will be used to pass value from child component to parent
+const AddToCart: React.FunctionComponent<({updateQuantity:(quantity:number) => void})>
+ = ({updateQuantity}) => {
+
+  let quantity = 0
+  // create reference to quantity input field
+  const quantityInput = useRef<HTMLInputElement>(null)
+
+  const submitForm = (event:React.FormEvent) => {
+    // call preventDefault() to avoid page rerendering
+    event.preventDefault()
+
+    if(quantityInput.current){
+      // get quantity entered in input field
+      const quantity = parseInt(quantityInput.current.value, 10)
+      console.log(`Quantity in child AddToCart after form submission: ${quantity}`)
+      // pass data to parent component, by calling the method provided as prop
+      updateQuantity(quantity)
+    }
+  }
+
+  return (
+    // set onSubmit event to submitForm method
+    <form onSubmit={submitForm}>
+      <input type="number"
+        name="quantity" 
+        id="quantity" 
+        // use ref property to connect input field to quantityInput variable
+        ref={quantityInput}
+        // set daefault value to quantity variable
+        defaultValue={quantity}
+      />
+      <button type='submit'>Submit</button>
+    </form>
+  )
+}
+
+export default AddToCart
+```
+
+Edit `src/components/ProductList.tsx` to iclude AddToCart component:
+```tsx
+// import child components
+import AddToCart from './AddToCart'
+//...
+  // create function to update quantity
+  // pass it later to child component to get updated quantity value
+  const updateQuantity = (quantity:number) => {
+    console.log(`Quantity in ProductList component: ${quantity}`)
+  }
+//...
+  {/* set updateQuantity prop in child component to updateQuantity 
+    function defined here, this will allow child component
+    to pass data (the updated quantity) to the parent compenent */}
+  <AddToCart updateQuantity={updateQuantity}></AddToCart>
+
+```

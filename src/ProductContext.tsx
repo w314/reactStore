@@ -85,7 +85,6 @@ const ProductsProvider = ({children}:{children:React.ReactNode}) => {
         // the json() method returns a second promise 
         // that parses the HTTP body text as JSON 
         .then(response => {
-          console.log(`Response: \n ${response}`)
           return response.json()
         })
         // use the data received to set products
