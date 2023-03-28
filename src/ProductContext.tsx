@@ -1,13 +1,16 @@
 // imports for using context
 import { createContext, useReducer, useEffect } from 'react'
-// import Product Model
+// import models
 import { ProductType}  from './models/ProductType'
+import { Order } from './models/Order'
+import { OrderItem } from './models/OrderItem'
 
 // *** SET TYPES USED *** //
 
 // create state type
 type StateType = {
   products: ProductType [] | null
+  cart: Order | null
   selectedProduct: ProductType | null
 }
 
@@ -17,6 +20,7 @@ type StateType = {
 // and a payload which is the data input needed for that action
 type ActionType =  
   { type: 'setProducts', payload: ProductType [] } |
+  { type: 'editCart', payload: OrderItem } |
   { type: 'setSelectedProduct', payload: ProductType }
 
 // create context type
@@ -32,6 +36,7 @@ type ProductContextType = {
 // set initital state
 const initialState: StateType = {
   products: null,
+  cart: null,
   selectedProduct: null
 }
 
@@ -50,6 +55,34 @@ const productReducer = (state: StateType, action: ActionType): StateType => {
       return { ...state, products: action.payload}
     case 'setSelectedProduct':
       return { ...state, selectedProduct: action.payload }
+    case 'editCart': 
+      if( state.cart ) {
+        console.log(`in edit cart item, with existing cart: ${action.payload}`)
+        // check if product is already in cart
+        const itemToEdit = state.cart.items.filter(item => 
+          item.productId === action.payload.productId)
+        // if product is already in cart update quantity
+        if(itemToEdit.length > 0) {
+          itemToEdit[0].quantity = action.payload.quantity
+        } 
+        // if product is not in cart add orderItem to cart
+        else {
+          state.cart.items.push(action.payload)
+        }
+      } else {
+        console.log(`in edit cart item, just starting new cart: ${action.payload}`)
+        state.cart = 
+          {
+            items: [action.payload],
+            status: 'active' 
+          }
+      }
+      for(let item of state.cart.items) {
+        console.log(item.productId, item.quantity)
+      }
+      return {...state}
+    
+
     // in case of unknown type throw error
     default:
       throw new Error()

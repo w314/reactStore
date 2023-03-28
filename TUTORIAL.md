@@ -436,5 +436,181 @@ import AddToCart from './AddToCart'
     function defined here, this will allow child component
     to pass data (the updated quantity) to the parent compenent */}
   <AddToCart updateQuantity={updateQuantity}></AddToCart>
+```
 
+## Make add to cart form in ProductList component add items to cart
+### Create Models for Cart
+Create OrderItem model:
+```bash
+touch src/models/OrderItem.ts
+```
+`src/models/OrderItem.ts`:
+```ts
+export default interface OrderItem {
+  productId: number,
+  quantity: number
+}
+```
+Create Order model:
+```bash
+touch src/app/models/Order.ts
+```
+
+`src/models/Order.ts`:
+```ts
+import OrderItem from "./OrderItem"
+
+export default interface Order {
+  items: OrderItem[]
+  status: 'completed' | 'active'
+}
+```
+
+### Update AddToCart component 
+- change props to: 
+  - productId
+  - editCart function with OrderItem prop 
+`src/components/AddToCart.tsx`:
+```tsx
+//...
+// import models
+import { OrderItem } from '../models/OrderItem'
+
+// props: 
+// productId
+// editCart function that will handle if we add to the cart
+const AddToCart: React.FunctionComponent<({productId: number, editCart:(item: OrderItem) => void})>
+ = ({productId, editCart}) => {
+//... in submitFrom:
+      // pass data to parent component, by calling the method provided as prop
+      editCart({productId: productId, quantity: quantity})
+//...
+```
+
+### Change ProductList to pass proper component to addToCart
+- get both state and dispatch from `ProductContext`
+- define editCart function to pass to `AddToCart` component
+- change properties passed to `AddToCart` component
+`src/components/ProductList`:
+```tsx
+//...
+// import models
+import { OrderItem } from '../models/OrderItem'
+//...
+  // use object destructuring 
+  // to get state and dispatch from context
+  const { state, dispatch } = useContext(ProductContext)
+
+  // create function to update cart
+  // pass it later to child component to get the quantity value
+  const editCart = (item: OrderItem) => {
+    console.log(`Quantity in ProductList component: ${item.quantity}`)
+    dispatch({type:'editCart', payload: item})
+  }
+//...
+      {/* set editCart prop in child component to editCart 
+        function defined here, this will allow child component
+        to pass data (the updated quantity) to the parent compenent 
+        pass productId so that child component can pass it back with the quanitty */}
+      <AddToCart editCart={editCart} productId={product.id}></AddToCart>
+//...
+```
+
+### Edit Cart component to show items
+`src/components/cart.tsx`
+```tsx
+import React from 'react'
+import { useContext } from 'react'
+import { ProductContext } from '../ProductContext'
+
+export default function Cart() {
+
+  // use object destructuring 
+  // to get state from context  
+  const { state } = useContext(ProductContext)
+  const cart = state.cart
+
+  return (
+    cart ?
+    // if cart is not null display items
+    <div>
+        <ul>
+          {cart?.items.map(item => { 
+            return (
+              <li key="item.productId">
+                item: {item.productId} quantity: {item.quantity}
+              </li>
+            )
+          })}
+        </ul>
+    </div>
+    // if cart is null dispaly empty cart message
+    : <div>Your Cart is Empty</div>
+  )
+}
+```
+
+### Edit ProductContext to add cart functionality
+- add cart to state
+- add editCart action to dispatch
+`src/ProductContext.tsx`:
+```tsx
+//...
+// import models
+import { Order } from './models/Order'
+import { OrderItem } from './models/OrderItem'
+
+// edit state type to add cart
+type StateType = {
+  products: ProductType [] | null
+  cart: Order | null
+  selectedProduct: ProductType | null
+}
+
+// add editCart action type
+type ActionType =  
+  { type: 'setProducts', payload: ProductType [] } |
+  { type: 'editCart', payload: OrderItem } |
+  { type: 'setSelectedProduct', payload: ProductType }
+
+
+// *** DEFINE STATE *** //
+
+// add cart to initital state
+const initialState: StateType = {
+  products: null,
+  cart: null,
+  selectedProduct: null
+}
+
+// add editCart to reducer                            
+const productReducer = (state: StateType, action: ActionType): StateType => {
+  switch(action.type) {
+    case 'editCart': 
+      if( state.cart ) {
+        console.log(`in edit cart item, with existing cart: ${action.payload}`)
+        // check if product is already in cart
+        const itemToEdit = state.cart.items.filter(item => 
+          item.productId === action.payload.productId)
+        // if product is already in cart update quantity
+        if(itemToEdit.length > 0) {
+          itemToEdit[0].quantity = action.payload.quantity
+        } 
+        // if product is not in cart add orderItem to cart
+        else {
+          state.cart.items.push(action.payload)
+        }
+      } else {
+        console.log(`in edit cart item, just starting new cart: ${action.payload}`)
+        state.cart = 
+          {
+            items: [action.payload],
+            status: 'active' 
+          }
+      }
+      for(let item of state.cart.items) {
+        console.log(item.productId, item.quantity)
+      }
+      return {...state}
+//...    
 ```

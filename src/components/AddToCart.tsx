@@ -1,11 +1,14 @@
 import React from 'react'
-// import useRef
+// import useRef to get quantity input enter by user
 import { useRef } from 'react'
+// import models
+import { OrderItem } from '../models/OrderItem'
 
-// add updateQuantity as prop to be received from parent component
-// will be used to pass value from child component to parent
-const AddToCart: React.FunctionComponent<({updateQuantity:(quantity:number) => void})>
- = ({updateQuantity}) => {
+// props: 
+// productId
+// editCart function that will handle if we add to the cart
+const AddToCart: React.FunctionComponent<({productId: number, editCart:(item: OrderItem) => void})>
+ = ({productId, editCart}) => {
 
   let quantity = 0
   // create reference to quantity input field
@@ -20,7 +23,7 @@ const AddToCart: React.FunctionComponent<({updateQuantity:(quantity:number) => v
       const quantity = parseInt(quantityInput.current.value, 10)
       console.log(`Quantity in child AddToCart after form submission: ${quantity}`)
       // pass data to parent component, by calling the method provided as prop
-      updateQuantity(quantity)
+      editCart({productId: productId, quantity: quantity})
     }
   }
 
