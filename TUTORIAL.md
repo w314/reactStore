@@ -614,3 +614,5 @@ const productReducer = (state: StateType, action: ActionType): StateType => {
       return {...state}
 //...    
 ```
+
+## Add functionality to edit cart

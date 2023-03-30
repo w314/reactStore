@@ -14,13 +14,15 @@ export default function ProductList() {
   // to get state and dispatch from context
   const { state, dispatch } = useContext(ProductContext)
 
-  // create function to update cart
-  // pass it later to child component to get the quantity value
-  const editCart = (item: OrderItem) => {
-    console.log(`Quantity in ProductList component: ${item.quantity}`)
-    dispatch({type:'editCart', payload: item})
-  }
+  // not used child component calls dispatch function
+  // // create function to update cart
+  // // pass it later to child component to get the quantity value
+  // const editCart = (item: OrderItem) => {
+  //   console.log(`Quantity in ProductList component: ${item.quantity}`)
+  //   dispatch({type:'editCart', payload: item})
+  // }
 
+  console.log(`RENDERING ProductList`)
   return (
     // if we have products
     state.products ?
@@ -41,7 +43,7 @@ export default function ProductList() {
                   function defined here, this will allow child component
                   to pass data (the updated quantity) to the parent compenent 
                   pass productId so that child component can pass it back with the quanitty */}
-                <AddToCart editCart={editCart} productId={product.id}></AddToCart>
+                <AddToCart inCart={false} productId={product.id}></AddToCart>
             </li>
           )
         })}

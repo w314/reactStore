@@ -41,6 +41,7 @@ const initialState: StateType = {
 }
 
 
+
 // define reducer function that will manage state
 // it receives the current state and the action implement as props
 // the reducer will modify state as needed based on the action type
@@ -56,32 +57,37 @@ const productReducer = (state: StateType, action: ActionType): StateType => {
     case 'setSelectedProduct':
       return { ...state, selectedProduct: action.payload }
     case 'editCart': 
+      // if there is alredy an existing cart
       if( state.cart ) {
-        console.log(`in edit cart item, with existing cart: ${action.payload}`)
-        // check if product is already in cart
+        // console.log(`in edit cart item, with existing cart: ${action.payload}`)
+        // if quantity is zero delete items from cart
+        if(action.payload.quantity === 0) {
+            const newCartItems = state.cart.items.filter(item => item.productId !== action.payload.productId)
+            return {...state, cart: {items:newCartItems, status:'active'}}
+        }
+
+        // if quantity is not zero check if product is already in cart
         const itemToEdit = state.cart.items.filter(item => 
           item.productId === action.payload.productId)
         // if product is already in cart update quantity
         if(itemToEdit.length > 0) {
           itemToEdit[0].quantity = action.payload.quantity
+          return {...state}
         } 
         // if product is not in cart add orderItem to cart
-        else {
-          state.cart.items.push(action.payload)
-        }
-      } else {
-        console.log(`in edit cart item, just starting new cart: ${action.payload}`)
-        state.cart = 
-          {
-            items: [action.payload],
-            status: 'active' 
-          }
+        state.cart.items.push(action.payload)
+        return {...state}
       }
-      for(let item of state.cart.items) {
-        console.log(item.productId, item.quantity)
+
+    // if there was no cart open before, open cart    
+    // console.log(`in edit cart item, just starting new cart: ${action.payload}`)
+    state.cart = 
+      {
+        items: [action.payload],
+        status: 'active' 
       }
-      return {...state}
-    
+    return {...state}
+  
 
     // in case of unknown type throw error
     default:
