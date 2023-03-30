@@ -7,48 +7,59 @@ import Product from './Product'
 import AddToCart from './AddToCart'
 // import models
 import { OrderItem } from '../models/OrderItem'
+// import for styling
+import styled from '@emotion/styled'
 
-export default function ProductList() {
+
+
+  // STYLED COMPONENTS
+  const Products = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: auto;
+    justify-content: center;
+  `
+  const ProductDiv = styled.div`
+   width: 30%;
+   margin: 10px;
+
+  `
+
+
+  export default function ProductList() {
 
   // use object destructuring 
   // to get state and dispatch from context
   const { state, dispatch } = useContext(ProductContext)
-
-  // not used child component calls dispatch function
-  // // create function to update cart
-  // // pass it later to child component to get the quantity value
-  // const editCart = (item: OrderItem) => {
-  //   console.log(`Quantity in ProductList component: ${item.quantity}`)
-  //   dispatch({type:'editCart', payload: item})
-  // }
 
   console.log(`RENDERING ProductList`)
   return (
     // if we have products
     state.products ?
     // return html
-    <div>
-      {/* display list of products names */}
-      <ul>
-        {/* to avoid error if products is null */}
-        {state.products.map(product => {
-          return (
-            <li key={product.id}>
-              {/* set key for each iteration
-                for this example as name is uniuq it will suffice
-                use child component Product to display product name
-                set product property to product to send data to child component */}
-                <Product product={product}></Product>
-                {/* set editCart prop in child component to editCart 
-                  function defined here, this will allow child component
-                  to pass data (the updated quantity) to the parent compenent 
-                  pass productId so that child component can pass it back with the quanitty */}
-                <AddToCart inCart={false} productId={product.id}></AddToCart>
-            </li>
-          )
-        })}
-      </ul>
-    </div>
+    <Products>
+      {/* to avoid error if products is null */}
+      {state.products.map(product => { return (
+        // set key for each iteration
+        <ProductDiv key={product.id}>
+          {/* use child component Product to display product
+          set product property to product to send data to child component
+          set withDetail to false as we don't want product details here */}
+          <Product 
+            product={product}
+            withDetail={false}
+          ></Product>
+          {/* pass inCart to let child component know if it is displayed within the cart component 
+            pass productId so that child component can use it to edit cart */}
+          <AddToCart 
+            inCart={false} 
+            productId={product.id}
+          ></AddToCart>
+        </ProductDiv>
+        )
+      })}
+    </Products>
     // if products is [] return null
     : null
   )
