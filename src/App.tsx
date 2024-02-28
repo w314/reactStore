@@ -1,15 +1,13 @@
 // imports for routing
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route } from "react-router-dom";
 // import ProductsProvider to provide context to components
-import ProductsProvider from './ProductContext'
+import ProductsProvider from "./ProductContext";
 // import components
-import ProductList from './components/ProductList'
-import NavBar from './components/NavBar'
-import Cart from './components/Cart'
+import ProductList from "./components/ProductList";
+import NavBar from "./components/NavBar";
+// import Cart from "./components/Cart";
 
 function App() {
-
-
   return (
     <div>
       <NavBar></NavBar>
@@ -18,12 +16,12 @@ function App() {
         {/* <Routes> will handle what components to display */}
         <Routes>
           <Route path="/products" element={<ProductList />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/" element={<ProductList /> } />
+          {/* <Route path="/cart" element={<Cart />} /> */}
+          <Route path="/" element={<ProductList />} />
         </Routes>
-      </ProductsProvider>  
+      </ProductsProvider>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
